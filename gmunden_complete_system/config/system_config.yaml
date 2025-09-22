@@ -1,0 +1,410 @@
+# Gmunden Transparenz-Datenbank - Vollständige Systemkonfiguration
+# Vereint alle Einstellungen aus den verschiedenen Projektversionen
+
+project:
+  name: "Gmunden Transparenz-Datenbank"
+  version: "2.0.0"
+  description: "Vollständiges Transparenz-System für Gemeindedaten mit KI-gestützter deutscher Sprachsuche"
+  author: "Gemeinde Gmunden"
+  license: "MIT"
+
+# All-Hands.dev spezifische Konfiguration
+all_hands_dev:
+  runtime:
+    environment: "production"
+    container_optimized: true
+    startup_time: "fast"
+    resource_usage: "medium"
+  
+  networking:
+    primary_port: 12000
+    secondary_port: 12001
+    host_binding: "0.0.0.0"
+    external_access: true
+    cors_enabled: true
+    iframe_support: true
+    websocket_support: false
+    ssl_required: false
+  
+  web_framework:
+    framework: "streamlit"
+    version: ">=1.28.0"
+    config_file: ".streamlit/config.toml"
+    startup_command: "streamlit run web/app.py --server.port 12000 --server.address 0.0.0.0 --server.enableCORS true"
+    health_check_endpoint: "/healthz"
+    ready_check_endpoint: "/"
+  
+  performance:
+    memory_limit: "2GB"
+    cpu_cores: 2
+    disk_space: "5GB"
+    cache_enabled: true
+    compression: true
+    lazy_loading: true
+    connection_pooling: true
+
+# Datenbank-Konfiguration
+database:
+  # MongoDB (Primär)
+  mongodb:
+    enabled: true
+    host: "localhost"
+    port: 27017
+    database: "gmunden_db"
+    username: null
+    password: null
+    connection_timeout: 5000
+    collections:
+      - "finanzen"
+      - "dokumente"
+      - "protokolle"
+      - "jahre"
+      - "benutzer"
+  
+  # SQLite (Fallback)
+  sqlite:
+    enabled: true
+    path: "data/gmunden.db"
+    backup_path: "data/backups/"
+    auto_backup: true
+    backup_interval_hours: 24
+
+# Datenintegration
+data_integration:
+  sources:
+    ooe_api:
+      enabled: true
+      url: "https://www.data.gv.at/katalog/api/3/action/package_search"
+      api_key: null
+      sync_interval_hours: 24
+      categories:
+        - "finanzen"
+        - "verwaltung"
+        - "infrastruktur"
+    
+    local_files:
+      enabled: true
+      import_path: "data/imports/"
+      processed_path: "data/processed/"
+      supported_formats:
+        - "pdf"
+        - "docx"
+        - "xlsx"
+        - "csv"
+        - "json"
+        - "xml"
+    
+    manual_upload:
+      enabled: true
+      max_file_size_mb: 50
+      allowed_extensions:
+        - ".pdf"
+        - ".docx"
+        - ".xlsx"
+        - ".csv"
+        - ".txt"
+        - ".json"
+  
+  processing:
+    ocr_enabled: true
+    ocr_language: "deu"
+    ocr_dpi: 300
+    text_extraction: true
+    metadata_extraction: true
+    auto_categorization: true
+    duplicate_detection: true
+
+# NLP-Konfiguration
+nlp:
+  language: "de"
+  model: "de_core_news_sm"  # spaCy model (optional)
+  fallback_enabled: true
+  
+  features:
+    intent_detection: true
+    entity_extraction: true
+    keyword_extraction: true
+    sentiment_analysis: false
+    query_suggestions: true
+    spell_correction: false
+  
+  confidence_thresholds:
+    intent_detection: 0.7
+    entity_extraction: 0.6
+    overall_query: 0.5
+  
+  supported_intents:
+    - "financial_search"
+    - "document_search"
+    - "protocol_search"
+    - "statistics_search"
+    - "general_search"
+
+# Qualitätssicherung
+quality:
+  monitoring_enabled: true
+  fact_checking_enabled: true
+  hallucination_prevention: true
+  
+  thresholds:
+    min_data_quality: 0.7
+    min_fact_confidence: 0.6
+    max_suspicious_patterns: 2
+  
+  checks:
+    data_completeness:
+      enabled: true
+      weight: 0.3
+      required_fields: ["jahr", "beschreibung"]
+      preferred_fields: ["kategorie", "betrag", "datum"]
+    
+    data_consistency:
+      enabled: true
+      weight: 0.25
+      year_range: [2000, 2025]
+      amount_range: [-1000000, 10000000]
+    
+    data_accuracy:
+      enabled: true
+      weight: 0.25
+      pattern_validation: true
+    
+    data_freshness:
+      enabled: true
+      weight: 0.2
+      max_age_days: 365
+  
+  fact_checking:
+    database_path: "data/known_facts.db"
+    auto_verification: true
+    suspicious_pattern_detection: true
+    consistency_checking: true
+
+# Web-Interface Konfiguration
+web_interface:
+  title: "Gmunden Transparenz-Datenbank"
+  description: "Vollständiger Zugang zu allen Gemeindedaten"
+  favicon: "🏛️"
+  
+  layout:
+    wide_mode: true
+    sidebar_expanded: true
+    theme: "light"
+  
+  features:
+    search_interface: true
+    data_visualization: true
+    document_upload: true
+    export_functionality: true
+    admin_panel: true
+    help_system: true
+  
+  visualization:
+    charts_enabled: true
+    interactive_plots: true
+    export_formats: ["png", "pdf", "svg"]
+    default_chart_height: 400
+  
+  security:
+    admin_password: "admin123"  # In Produktion ändern!
+    session_timeout_minutes: 60
+    max_upload_size_mb: 50
+    rate_limiting: false
+
+# Docker-Konfiguration
+docker:
+  base_image: "python:3.11-slim"
+  working_directory: "/app"
+  
+  services:
+    web:
+      build: "."
+      ports:
+        - "12000:12000"
+        - "12001:12001"
+      environment:
+        - "PYTHONPATH=/app"
+        - "STREAMLIT_SERVER_PORT=12000"
+        - "STREAMLIT_SERVER_ADDRESS=0.0.0.0"
+      volumes:
+        - "./data:/app/data"
+        - "./config:/app/config"
+    
+    mongodb:
+      image: "mongo:7.0"
+      ports:
+        - "27017:27017"
+      environment:
+        - "MONGO_INITDB_ROOT_USERNAME=admin"
+        - "MONGO_INITDB_ROOT_PASSWORD=change_me_strong"
+        - "MONGO_INITDB_DATABASE=gmunden_db"
+      volumes:
+        - "mongo_data:/data/db"
+        - "./database/init.js:/docker-entrypoint-initdb.d/init.js"
+    
+    ocr_agent:
+      build: "./ocr-agent"
+      ports:
+        - "8080:8080"
+      environment:
+        - "OCR_LANGUAGE=deu"
+        - "OCR_DPI=300"
+      volumes:
+        - "./data/uploads:/app/uploads"
+
+# Logging-Konfiguration
+logging:
+  level: "INFO"
+  format: "%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+  
+  handlers:
+    console:
+      enabled: true
+      level: "INFO"
+    
+    file:
+      enabled: true
+      level: "DEBUG"
+      filename: "logs/gmunden_app.log"
+      max_size_mb: 10
+      backup_count: 5
+    
+    error_file:
+      enabled: true
+      level: "ERROR"
+      filename: "logs/gmunden_errors.log"
+      max_size_mb: 5
+      backup_count: 3
+
+# Backup-Konfiguration
+backup:
+  enabled: true
+  schedule: "0 3 * * 1"  # Montags um 3:00 Uhr
+  
+  targets:
+    database:
+      enabled: true
+      format: "mongodump"
+      compression: true
+      retention_days: 30
+    
+    files:
+      enabled: true
+      include_paths:
+        - "data/"
+        - "config/"
+      exclude_patterns:
+        - "*.tmp"
+        - "*.log"
+        - "__pycache__"
+      compression: true
+      retention_days: 14
+  
+  storage:
+    local:
+      enabled: true
+      path: "backups/"
+    
+    remote:
+      enabled: false
+      type: "s3"  # oder "ftp", "sftp"
+      config: {}
+
+# Monitoring & Metriken
+monitoring:
+  enabled: true
+  
+  metrics:
+    system_metrics: true
+    application_metrics: true
+    database_metrics: true
+    user_metrics: false  # Datenschutz
+  
+  alerts:
+    enabled: false
+    email_notifications: false
+    webhook_url: null
+  
+  health_checks:
+    database_connection: true
+    file_system_access: true
+    external_apis: true
+    memory_usage: true
+    disk_space: true
+
+# Sicherheit
+security:
+  authentication:
+    enabled: false  # Für öffentlichen Zugang
+    method: "simple"  # oder "oauth", "ldap"
+  
+  authorization:
+    admin_functions: true
+    upload_restrictions: true
+    export_limitations: false
+  
+  data_protection:
+    anonymization: true
+    encryption_at_rest: false
+    encryption_in_transit: true
+    audit_logging: true
+  
+  input_validation:
+    sql_injection_protection: true
+    xss_protection: true
+    file_type_validation: true
+    size_limitations: true
+
+# Entwicklung & Debug
+development:
+  debug_mode: false
+  hot_reload: false
+  profiling: false
+  
+  testing:
+    unit_tests: true
+    integration_tests: true
+    performance_tests: false
+  
+  documentation:
+    api_docs: true
+    user_manual: true
+    admin_guide: true
+
+# Lokalisierung
+localization:
+  default_language: "de"
+  supported_languages: ["de"]
+  
+  formats:
+    date_format: "%d.%m.%Y"
+    time_format: "%H:%M"
+    number_format: "de_DE"
+    currency: "EUR"
+    currency_symbol: "€"
+
+# Performance-Optimierung
+performance:
+  caching:
+    enabled: true
+    backend: "memory"  # oder "redis", "memcached"
+    ttl_seconds: 3600
+    max_size_mb: 100
+  
+  database:
+    connection_pooling: true
+    query_optimization: true
+    indexing: true
+  
+  web:
+    compression: true
+    minification: false
+    cdn: false
+    lazy_loading: true
+
+# Experimentelle Features
+experimental:
+  ai_suggestions: false
+  advanced_analytics: false
+  real_time_updates: false
+  mobile_app_api: false

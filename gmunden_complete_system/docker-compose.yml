@@ -1,0 +1,122 @@
+# 🐳 Docker Compose für Gmunden Transparenz-System
+# Vollständige Lösung mit MongoDB, Redis und Backup
+
+version: '3.8'
+
+services:
+  # Hauptanwendung
+  gmunden-app:
+    build: .
+    container_name: gmunden-transparenz
+    ports:
+      - "12000:12000"
+    volumes:
+      - gmunden_data:/app/data
+      - gmunden_logs:/app/logs
+      - ./uploads:/app/data/uploads  # Für lokale Uploads
+    environment:
+      - STREAMLIT_SERVER_PORT=12000
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - MONGODB_URL=mongodb://mongo:27017/gmunden
+      - REDIS_URL=redis://redis:6379/0
+    depends_on:
+      - mongo
+      - redis
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:12000/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - gmunden-network
+
+  # MongoDB Datenbank
+  mongo:
+    image: mongo:7.0
+    container_name: gmunden-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - gmunden_mongo_data:/data/db
+      - gmunden_mongo_config:/data/configdb
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=gmunden123
+      - MONGO_INITDB_DATABASE=gmunden
+    restart: unless-stopped
+    networks:
+      - gmunden-network
+
+  # Redis Cache
+  redis:
+    image: redis:7.2-alpine
+    container_name: gmunden-redis
+    ports:
+      - "6379:6379"
+    volumes:
+      - gmunden_redis_data:/data
+    command: redis-server --appendonly yes --maxmemory 256mb --maxmemory-policy allkeys-lru
+    restart: unless-stopped
+    networks:
+      - gmunden-network
+
+  # Backup Service
+  backup:
+    image: alpine:latest
+    container_name: gmunden-backup
+    volumes:
+      - gmunden_data:/backup/data:ro
+      - gmunden_mongo_data:/backup/mongo:ro
+      - ./backups:/backup/output
+    command: |
+      sh -c "
+        apk add --no-cache tar gzip
+        while true; do
+          echo '🔄 Erstelle Backup...'
+          tar -czf /backup/output/gmunden_backup_$$(date +%Y%m%d_%H%M%S).tar.gz -C /backup data mongo
+          echo '✅ Backup erstellt'
+          # Alte Backups löschen (älter als 7 Tage)
+          find /backup/output -name '*.tar.gz' -mtime +7 -delete
+          sleep 86400  # 24 Stunden warten
+        done
+      "
+    restart: unless-stopped
+    networks:
+      - gmunden-network
+
+  # Nginx Reverse Proxy (Optional)
+  nginx:
+    image: nginx:alpine
+    container_name: gmunden-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf:ro
+      - ./ssl:/etc/nginx/ssl:ro
+    depends_on:
+      - gmunden-app
+    restart: unless-stopped
+    networks:
+      - gmunden-network
+
+# Volumes für persistente Daten
+volumes:
+  gmunden_data:
+    driver: local
+  gmunden_logs:
+    driver: local
+  gmunden_mongo_data:
+    driver: local
+  gmunden_mongo_config:
+    driver: local
+  gmunden_redis_data:
+    driver: local
+
+# Netzwerk
+networks:
+  gmunden-network:
+    driver: bridge

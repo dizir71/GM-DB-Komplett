@@ -1,0 +1,79 @@
+# All-Hands.dev optimierte Streamlit-Konfiguration
+# Gmunden Transparenz-Datenbank
+
+[server]
+# Port-Konfiguration für All-Hands.dev
+port = 12000
+address = "0.0.0.0"
+
+# CORS für All-Hands.dev aktivieren
+enableCORS = true
+enableXsrfProtection = false
+allowedOrigins = ["*"]
+
+# Upload-Limits für Datenintegration
+maxUploadSize = 200
+maxMessageSize = 200
+
+# Performance-Optimierungen
+runOnSave = false
+allowRunOnSave = false
+
+# WebSocket-Konfiguration
+enableWebsocketCompression = true
+
+[browser]
+# Keine Statistiken sammeln
+gatherUsageStats = false
+
+# Fehlerdetails anzeigen (für Debugging)
+showErrorDetails = true
+
+[global]
+# Entwicklungsmodus deaktivieren (Produktion)
+developmentMode = false
+
+# Logging-Level
+logLevel = "info"
+
+# Datenframe-Konfiguration
+dataFrameSerialization = "legacy"
+
+# Metriken deaktivieren
+showWarningOnDirectExecution = false
+
+[theme]
+# Gemeinde-Farben für Transparenz-System
+primaryColor = "#1f77b4"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f0f2f6"
+textColor = "#262730"
+font = "sans serif"
+
+[client]
+# Toolbar-Modus für bessere UX
+toolbarMode = "minimal"
+
+# Caching-Konfiguration
+caching = true
+
+[runner]
+# Magic-Commands aktivieren
+magicEnabled = true
+
+# Installation von Paketen erlauben
+installTracer = false
+
+# Schnellere Ausführung
+fastReruns = true
+
+[logger]
+# Log-Level für Produktion
+level = "INFO"
+
+# Log-Format
+messageFormat = "%(asctime)s %(levelname)s: %(message)s"
+
+[deprecation]
+# Deprecation-Warnungen ausblenden
+showPyplotGlobalUse = false

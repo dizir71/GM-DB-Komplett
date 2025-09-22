@@ -1,0 +1,119 @@
+# All-Hands.dev optimierte Docker Compose Konfiguration
+# Gmunden Transparenz-Datenbank
+
+version: '3.8'
+
+services:
+  # Hauptanwendung für All-Hands.dev
+  gmunden-transparenz:
+    build:
+      context: .
+      dockerfile: Dockerfile.all-hands-dev
+    container_name: gmunden-transparenz-app
+    ports:
+      - "12000:12000"  # Primärer Port für All-Hands.dev
+      - "12001:12001"  # Backup-Port für All-Hands.dev
+    environment:
+      # All-Hands.dev spezifische Umgebungsvariablen
+      - STREAMLIT_SERVER_PORT=12000
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+      - STREAMLIT_SERVER_ENABLE_CORS=true
+      - STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION=false
+      - STREAMLIT_BROWSER_GATHER_USAGE_STATS=false
+      
+      # Anwendungs-Konfiguration
+      - APP_ENV=production
+      - LOG_LEVEL=INFO
+      - DATA_QUALITY_THRESHOLD=0.8
+      - NLP_MODEL=de_core_news_sm
+      
+      # Datenbank-Konfiguration
+      - MONGODB_URI=mongodb://mongo:27017/gmunden_transparenz
+      
+      # Performance-Konfiguration
+      - CACHE_ENABLED=true
+      - CACHE_TTL=3600
+      
+    volumes:
+      - ./data:/app/data
+      - ./logs:/app/logs
+      - ./uploads:/app/uploads
+      - ./exports:/app/exports
+    depends_on:
+      - mongo
+    restart: unless-stopped
+    networks:
+      - gmunden-network
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:12000/"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 30s
+
+  # MongoDB für Datenbank
+  mongo:
+    image: mongo:7.0
+    container_name: gmunden-mongo
+    ports:
+      - "27017:27017"
+    environment:
+      - MONGO_INITDB_DATABASE=gmunden_transparenz
+    volumes:
+      - mongo_data:/data/db
+      - ./mongo-init:/docker-entrypoint-initdb.d
+    restart: unless-stopped
+    networks:
+      - gmunden-network
+    healthcheck:
+      test: ["CMD", "mongosh", "--eval", "db.adminCommand('ping')"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+
+  # OCR-Service (optional)
+  ocr-service:
+    image: tesseract-ocr:latest
+    container_name: gmunden-ocr
+    ports:
+      - "8080:8080"
+    environment:
+      - OCR_LANGUAGES=deu,eng
+    volumes:
+      - ./ocr-temp:/tmp/ocr
+    restart: unless-stopped
+    networks:
+      - gmunden-network
+    profiles:
+      - full  # Nur mit --profile full starten
+
+  # Nginx Load Balancer (für Skalierung)
+  nginx:
+    image: nginx:alpine
+    container_name: gmunden-nginx
+    ports:
+      - "80:80"
+      - "443:443"
+    volumes:
+      - ./nginx.conf:/etc/nginx/nginx.conf
+      - ./ssl:/etc/nginx/ssl
+    depends_on:
+      - gmunden-transparenz
+    restart: unless-stopped
+    networks:
+      - gmunden-network
+    profiles:
+      - production  # Nur für Produktion
+
+volumes:
+  mongo_data:
+    driver: local
+  app_data:
+    driver: local
+
+networks:
+  gmunden-network:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.20.0.0/16

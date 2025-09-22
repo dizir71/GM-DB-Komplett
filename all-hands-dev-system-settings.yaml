@@ -1,0 +1,492 @@
+# All-Hands.dev Optimale Systemeinstellungen
+# Gmunden Transparenz-Datenbank Projekt
+
+project_info:
+  name: "Gmunden Transparenz-Datenbank"
+  description: "KI-gestütztes Transparenz-System für Gemeindedaten mit deutscher NLP-Suche"
+  version: "2.0.0"
+  maintainer: "Gemeinde Gmunden IT-Team"
+  license: "MIT"
+
+# All-Hands.dev spezifische Konfiguration
+all_hands_dev:
+  runtime:
+    # Container-Optimierungen für All-Hands.dev
+    container_type: "web-application"
+    startup_time: "fast"  # < 30 Sekunden
+    memory_efficient: true
+    cpu_efficient: true
+    
+  networking:
+    # Port-Konfiguration für All-Hands.dev
+    ports:
+      primary: 12000
+      secondary: 12001
+      health_check: 8080
+    
+    # Netzwerk-Einstellungen
+    host: "0.0.0.0"  # Wichtig für All-Hands.dev
+    cors:
+      enabled: true
+      origins: ["*"]
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+      headers: ["*"]
+    
+    iframe:
+      enabled: true
+      x_frame_options: "ALLOWALL"
+      content_security_policy: "frame-ancestors *"
+    
+    websockets:
+      enabled: false  # Nicht benötigt für Streamlit
+    
+    ssl:
+      required: false  # All-Hands.dev handled SSL
+      redirect_http: false
+
+# Web-Framework Konfiguration
+web_framework:
+  framework: "streamlit"
+  version: ">=1.28.0"
+  
+  streamlit_config:
+    server:
+      port: 12000
+      address: "0.0.0.0"
+      enableCORS: true
+      enableXsrfProtection: false
+      maxUploadSize: 200  # MB
+      maxMessageSize: 200  # MB
+      
+    browser:
+      gatherUsageStats: false
+      showErrorDetails: true
+      
+    global:
+      developmentMode: false
+      logLevel: "info"
+      
+    theme:
+      primaryColor: "#1f77b4"
+      backgroundColor: "#ffffff"
+      secondaryBackgroundColor: "#f0f2f6"
+      textColor: "#262730"
+      font: "sans serif"
+
+# Datenintegration Konfiguration
+data_integration:
+  # Unterstützte Datenquellen
+  sources:
+    files:
+      enabled: true
+      formats:
+        - "pdf"
+        - "docx" 
+        - "xlsx"
+        - "csv"
+        - "txt"
+        - "json"
+        - "xml"
+        - "jpg"
+        - "png"
+        - "tiff"
+      max_size_mb: 100
+      batch_processing: true
+      ocr_enabled: true
+      
+    databases:
+      mongodb:
+        enabled: true
+        uri: "mongodb://localhost:27017/gmunden_transparenz"
+        collections:
+          - "finanzen"
+          - "protokolle" 
+          - "dokumente"
+          - "jahre"
+          - "statistiken"
+          - "metadaten"
+        indexes:
+          - field: "jahr"
+            type: "ascending"
+          - field: "kategorie"
+            type: "ascending"
+          - field: "datum"
+            type: "descending"
+          - field: "text_content"
+            type: "text"
+            
+      postgresql:
+        enabled: false
+        fallback: true
+        
+    web_apis:
+      enabled: true
+      rate_limit: 100  # requests per minute
+      timeout: 30  # seconds
+      retry_attempts: 3
+      supported_auth:
+        - "api_key"
+        - "oauth2"
+        - "basic_auth"
+        
+    web_scraping:
+      enabled: true
+      respect_robots_txt: true
+      rate_limit: 10  # requests per minute
+      user_agent: "Gmunden-Transparenz-Bot/2.0"
+      
+  # Import-Methoden
+  import_methods:
+    manual:
+      drag_drop: true
+      file_upload: true
+      url_import: true
+      bulk_import: true
+      
+    automatic:
+      scheduled: true
+      api_polling: true
+      file_watching: true
+      webhook_triggers: true
+      
+    validation:
+      schema_validation: true
+      data_quality_checks: true
+      duplicate_detection: true
+      format_conversion: true
+
+# NLP und KI Konfiguration
+nlp_ai:
+  language: "german"
+  
+  models:
+    primary: "de_core_news_lg"
+    fallback:
+      - "de_core_news_md"
+      - "de_core_news_sm"
+    custom_models: []
+    
+  features:
+    natural_language_queries: true
+    entity_recognition: true
+    intent_classification: true
+    context_understanding: true
+    correlation_analysis: true
+    sentiment_analysis: false
+    
+  quality_assurance:
+    fact_checking: true
+    hallucination_prevention: true
+    source_verification: true
+    confidence_scoring: true
+    uncertainty_indication: true
+    confidence_threshold: 0.8
+    
+  processing:
+    batch_size: 100
+    max_tokens: 1000000
+    timeout: 30  # seconds
+    cache_results: true
+    cache_ttl: 3600  # seconds
+
+# Benutzeroberfläche Konfiguration
+user_interface:
+  design:
+    responsive: true
+    mobile_optimized: true
+    accessibility: "WCAG_2.1_AA"
+    theme: "government"
+    
+  colors:
+    primary: "#1f77b4"
+    secondary: "#2ca02c" 
+    success: "#28a745"
+    warning: "#ffc107"
+    error: "#dc3545"
+    background: "#ffffff"
+    text: "#262730"
+    
+  features:
+    search:
+      natural_language: true
+      example_queries: true
+      search_suggestions: true
+      search_history: true
+      advanced_filters: true
+      real_time_search: false
+      
+    visualization:
+      charts:
+        - "bar"
+        - "line"
+        - "pie"
+        - "scatter"
+        - "heatmap"
+      interactive: true
+      export_formats:
+        - "png"
+        - "svg"
+        - "pdf"
+        - "csv"
+      real_time_updates: false
+      
+    export:
+      formats:
+        - "csv"
+        - "excel"
+        - "pdf"
+        - "json"
+      bulk_export: true
+      filtered_export: true
+      
+  navigation:
+    sidebar: true
+    breadcrumbs: true
+    search_bar: true
+    user_menu: false  # Öffentliches System
+
+# Sicherheit und Datenschutz
+security_privacy:
+  data_protection:
+    anonymization: true
+    gdpr_compliant: true
+    data_retention_days: 2555  # 7 Jahre
+    audit_logging: true
+    
+  security:
+    input_validation: true
+    xss_protection: true
+    csrf_protection: true
+    rate_limiting: true
+    ip_whitelisting: false
+    authentication_required: false  # Öffentliches System
+    
+  transparency:
+    public_data_only: true
+    source_attribution: true
+    data_lineage: true
+    update_timestamps: true
+    version_control: true
+
+# Monitoring und Qualitätssicherung
+monitoring_quality:
+  data_quality:
+    real_time_monitoring: true
+    quality_metrics:
+      accuracy: true
+      completeness: true
+      consistency: true
+      timeliness: true
+      validity: true
+    quality_threshold: 85  # Prozent
+    
+  system_monitoring:
+    performance_metrics: true
+    error_tracking: true
+    usage_analytics: true
+    uptime_monitoring: true
+    resource_monitoring: true
+    
+  logging:
+    level: "INFO"
+    format: "json"
+    rotation: "daily"
+    retention_days: 30
+    
+  alerting:
+    enabled: true
+    channels:
+      - "console"
+      - "log"
+      - "webhook"
+    thresholds:
+      error_rate: 5  # Prozent
+      response_time: 5000  # Millisekunden
+      memory_usage: 80  # Prozent
+      cpu_usage: 80  # Prozent
+
+# Performance Optimierung
+performance:
+  caching:
+    enabled: true
+    backend: "memory"  # Für All-Hands.dev
+    ttl: 3600  # Sekunden
+    max_size: "500MB"
+    
+  compression:
+    enabled: true
+    algorithm: "gzip"
+    level: 6
+    
+  lazy_loading:
+    enabled: true
+    chunk_size: 1000
+    
+  connection_pooling:
+    enabled: true
+    max_connections: 20
+    timeout: 30
+    
+  resource_limits:
+    memory: "2GB"
+    cpu_cores: 2
+    disk_space: "5GB"
+    max_file_size: "100MB"
+    max_request_size: "200MB"
+
+# Deployment Konfiguration
+deployment:
+  environment: "production"
+  
+  container:
+    base_image: "python:3.11-slim"
+    multi_stage: true
+    security_scan: true
+    
+  environment_variables:
+    # Streamlit
+    STREAMLIT_SERVER_PORT: "12000"
+    STREAMLIT_SERVER_ADDRESS: "0.0.0.0"
+    STREAMLIT_SERVER_ENABLE_CORS: "true"
+    STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION: "false"
+    STREAMLIT_BROWSER_GATHER_USAGE_STATS: "false"
+    
+    # Anwendung
+    APP_ENV: "production"
+    LOG_LEVEL: "INFO"
+    DATA_QUALITY_THRESHOLD: "0.8"
+    NLP_MODEL: "de_core_news_sm"
+    
+    # Datenbank
+    MONGODB_URI: "mongodb://localhost:27017/gmunden_transparenz"
+    
+    # Performance
+    CACHE_ENABLED: "true"
+    CACHE_TTL: "3600"
+    
+  health_checks:
+    startup:
+      path: "/"
+      initial_delay: 30
+      period: 10
+      timeout: 5
+      failure_threshold: 3
+      
+    liveness:
+      path: "/"
+      period: 30
+      timeout: 5
+      failure_threshold: 3
+      
+    readiness:
+      path: "/"
+      period: 10
+      timeout: 5
+      failure_threshold: 3
+
+# Entwicklung und Testing
+development:
+  local_development:
+    hot_reload: true
+    debug_mode: true
+    test_data: true
+    mock_services: true
+    
+  testing:
+    unit_tests: true
+    integration_tests: true
+    e2e_tests: false
+    performance_tests: true
+    security_tests: true
+    
+  documentation:
+    api_docs: true
+    user_guide: true
+    admin_guide: true
+    developer_docs: true
+
+# Compliance und Standards
+compliance:
+  standards:
+    accessibility: "WCAG_2.1_AA"
+    data_protection: "GDPR"
+    security: "OWASP_Top_10"
+    government: "Austrian_Government_Standards"
+    
+  certifications:
+    iso_27001: false
+    soc2: false
+    government_approved: true
+
+# Skalierbarkeit
+scalability:
+  horizontal:
+    supported: true
+    load_balancer: "nginx"
+    session_management: "stateless"
+    
+  vertical:
+    cpu_scaling: true
+    memory_scaling: true
+    storage_scaling: true
+    
+  auto_scaling:
+    enabled: false  # Für All-Hands.dev nicht erforderlich
+    min_instances: 1
+    max_instances: 3
+    cpu_threshold: 70
+    memory_threshold: 80
+
+# Backup und Recovery
+backup_recovery:
+  backup:
+    enabled: true
+    frequency: "daily"
+    retention_days: 30
+    compression: true
+    encryption: true
+    
+  recovery:
+    rto_hours: 4  # Recovery Time Objective
+    rpo_hours: 1  # Recovery Point Objective
+    automated: true
+    
+# Externe Integrationen
+integrations:
+  government_apis:
+    data_gv_at:
+      enabled: true
+      api_key_required: false
+      rate_limit: 1000
+      
+    statistik_at:
+      enabled: true
+      api_key_required: false
+      rate_limit: 500
+      
+  third_party_services:
+    ocr_service:
+      enabled: true
+      provider: "tesseract"
+      languages: ["deu", "eng"]
+      
+    email_service:
+      enabled: false
+      
+    notification_service:
+      enabled: false
+
+# Wartung und Updates
+maintenance:
+  automated_updates:
+    enabled: false  # Manuelle Kontrolle bevorzugt
+    security_patches: true
+    
+  maintenance_windows:
+    scheduled: "Sunday 02:00-04:00 CET"
+    emergency: "anytime"
+    
+  version_control:
+    git_integration: true
+    branch_strategy: "main"
+    tag_releases: true

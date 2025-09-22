@@ -1,0 +1,329 @@
+{
+  "project": {
+    "name": "Gmunden Transparenz-Datenbank",
+    "description": "Vollständiges Transparenz-System für Gemeindedaten mit KI-gestützter deutscher Sprachsuche",
+    "version": "2.0.0",
+    "type": "web-application",
+    "category": "government-transparency",
+    "tags": ["transparency", "government", "database", "nlp", "german", "municipality", "data-integration"]
+  },
+  
+  "all_hands_dev_config": {
+    "runtime": {
+      "environment": "production",
+      "container_optimized": true,
+      "startup_time": "fast",
+      "resource_usage": "medium"
+    },
+    
+    "networking": {
+      "primary_port": 12000,
+      "secondary_port": 12001,
+      "host_binding": "0.0.0.0",
+      "external_access": true,
+      "cors_enabled": true,
+      "iframe_support": true,
+      "websocket_support": false,
+      "ssl_required": false
+    },
+    
+    "web_framework": {
+      "framework": "streamlit",
+      "version": ">=1.28.0",
+      "config_file": ".streamlit/config.toml",
+      "startup_command": "streamlit run web/app.py --server.port 12000 --server.address 0.0.0.0 --server.enableCORS true",
+      "health_check_endpoint": "/healthz",
+      "ready_check_endpoint": "/"
+    },
+    
+    "performance": {
+      "memory_limit": "2GB",
+      "cpu_cores": 2,
+      "disk_space": "5GB",
+      "cache_enabled": true,
+      "compression": true,
+      "lazy_loading": true,
+      "connection_pooling": true
+    }
+  },
+  
+  "data_integration": {
+    "supported_sources": {
+      "files": {
+        "formats": ["pdf", "docx", "xlsx", "csv", "txt", "json", "xml"],
+        "max_file_size": "100MB",
+        "batch_processing": true,
+        "ocr_support": true
+      },
+      "databases": {
+        "mongodb": {
+          "enabled": true,
+          "connection_string": "mongodb://localhost:27017/gmunden_transparenz",
+          "collections": ["finanzen", "protokolle", "dokumente", "jahre", "statistiken"]
+        },
+        "postgresql": {
+          "enabled": false,
+          "fallback": true
+        }
+      },
+      "web_apis": {
+        "enabled": true,
+        "supported_formats": ["json", "xml", "csv"],
+        "rate_limiting": true,
+        "authentication": ["api_key", "oauth2", "basic_auth"]
+      },
+      "web_scraping": {
+        "enabled": true,
+        "respect_robots_txt": true,
+        "rate_limiting": true,
+        "user_agent": "Gmunden-Transparenz-Bot/2.0"
+      }
+    },
+    
+    "import_methods": {
+      "manual": {
+        "drag_drop": true,
+        "file_upload": true,
+        "url_import": true,
+        "bulk_import": true
+      },
+      "automatic": {
+        "scheduled_imports": true,
+        "api_polling": true,
+        "file_watching": true,
+        "webhook_triggers": true
+      }
+    }
+  },
+  
+  "nlp_configuration": {
+    "language": "german",
+    "primary_model": "de_core_news_lg",
+    "fallback_models": ["de_core_news_md", "de_core_news_sm"],
+    "features": {
+      "natural_language_queries": true,
+      "entity_recognition": true,
+      "intent_classification": true,
+      "context_understanding": true,
+      "correlation_analysis": true,
+      "fact_verification": true,
+      "confidence_scoring": true
+    },
+    "quality_assurance": {
+      "hallucination_prevention": true,
+      "source_verification": true,
+      "reality_check": true,
+      "uncertainty_indication": true,
+      "confidence_threshold": 0.8
+    }
+  },
+  
+  "user_interface": {
+    "design": {
+      "responsive": true,
+      "mobile_optimized": true,
+      "accessibility_compliant": true,
+      "theme": "government",
+      "color_scheme": {
+        "primary": "#1f77b4",
+        "secondary": "#2ca02c",
+        "background": "#ffffff",
+        "text": "#262730"
+      }
+    },
+    
+    "features": {
+      "search_interface": {
+        "natural_language": true,
+        "example_queries": true,
+        "search_suggestions": true,
+        "search_history": true,
+        "advanced_filters": true
+      },
+      "data_visualization": {
+        "charts": ["bar", "line", "pie", "scatter"],
+        "interactive": true,
+        "export_formats": ["png", "svg", "pdf", "csv"],
+        "real_time_updates": false
+      },
+      "export_functionality": {
+        "formats": ["csv", "excel", "pdf", "json"],
+        "bulk_export": true,
+        "filtered_export": true
+      }
+    }
+  },
+  
+  "security_privacy": {
+    "data_protection": {
+      "anonymization": true,
+      "gdpr_compliant": true,
+      "data_retention_policy": "7_years",
+      "audit_logging": true
+    },
+    
+    "security_measures": {
+      "input_validation": true,
+      "xss_protection": true,
+      "csrf_protection": true,
+      "rate_limiting": true,
+      "ip_whitelisting": false,
+      "authentication_required": false
+    },
+    
+    "transparency": {
+      "public_data_only": true,
+      "source_attribution": true,
+      "data_lineage": true,
+      "update_timestamps": true
+    }
+  },
+  
+  "monitoring_quality": {
+    "data_quality": {
+      "real_time_monitoring": true,
+      "accuracy_checks": true,
+      "completeness_validation": true,
+      "consistency_monitoring": true,
+      "timeliness_tracking": true,
+      "quality_score_threshold": 85
+    },
+    
+    "system_monitoring": {
+      "performance_metrics": true,
+      "error_tracking": true,
+      "usage_analytics": true,
+      "uptime_monitoring": true,
+      "resource_monitoring": true
+    },
+    
+    "alerting": {
+      "quality_alerts": true,
+      "performance_alerts": true,
+      "error_alerts": true,
+      "channels": ["log", "console", "webhook"]
+    }
+  },
+  
+  "deployment": {
+    "container": {
+      "base_image": "python:3.11-slim",
+      "dockerfile_present": true,
+      "multi_stage_build": true,
+      "security_scanning": true
+    },
+    
+    "environment_variables": {
+      "STREAMLIT_SERVER_PORT": "12000",
+      "STREAMLIT_SERVER_ADDRESS": "0.0.0.0",
+      "STREAMLIT_SERVER_ENABLE_CORS": "true",
+      "STREAMLIT_SERVER_ENABLE_XSRF_PROTECTION": "false",
+      "STREAMLIT_BROWSER_GATHER_USAGE_STATS": "false",
+      "MONGODB_URI": "mongodb://localhost:27017/gmunden_transparenz",
+      "DATA_QUALITY_THRESHOLD": "0.8",
+      "NLP_MODEL": "de_core_news_sm",
+      "LOG_LEVEL": "INFO"
+    },
+    
+    "health_checks": {
+      "startup_probe": {
+        "path": "/",
+        "initial_delay": 30,
+        "period": 10,
+        "timeout": 5,
+        "failure_threshold": 3
+      },
+      "liveness_probe": {
+        "path": "/",
+        "period": 30,
+        "timeout": 5,
+        "failure_threshold": 3
+      },
+      "readiness_probe": {
+        "path": "/",
+        "period": 10,
+        "timeout": 5,
+        "failure_threshold": 3
+      }
+    }
+  },
+  
+  "development": {
+    "local_development": {
+      "hot_reload": true,
+      "debug_mode": true,
+      "test_data": true,
+      "mock_services": true
+    },
+    
+    "testing": {
+      "unit_tests": true,
+      "integration_tests": true,
+      "e2e_tests": false,
+      "performance_tests": true,
+      "security_tests": true
+    },
+    
+    "documentation": {
+      "api_docs": true,
+      "user_guide": true,
+      "admin_guide": true,
+      "developer_docs": true,
+      "deployment_guide": true
+    }
+  },
+  
+  "compliance": {
+    "standards": {
+      "accessibility": "WCAG_2.1_AA",
+      "data_protection": "GDPR",
+      "security": "OWASP_Top_10",
+      "government": "Austrian_Government_Standards"
+    },
+    
+    "certifications": {
+      "iso_27001": false,
+      "soc2": false,
+      "government_approved": true
+    }
+  },
+  
+  "scalability": {
+    "horizontal_scaling": {
+      "supported": true,
+      "load_balancer": "nginx",
+      "session_management": "stateless",
+      "database_clustering": true
+    },
+    
+    "vertical_scaling": {
+      "cpu_scaling": true,
+      "memory_scaling": true,
+      "storage_scaling": true
+    },
+    
+    "caching": {
+      "application_cache": true,
+      "database_cache": true,
+      "cdn_support": true,
+      "cache_invalidation": "time_based"
+    }
+  },
+  
+  "backup_recovery": {
+    "backup_strategy": {
+      "frequency": "daily",
+      "retention": "30_days",
+      "compression": true,
+      "encryption": true,
+      "offsite_storage": true
+    },
+    
+    "recovery": {
+      "rto": "4_hours",
+      "rpo": "1_hour",
+      "automated_recovery": true,
+      "disaster_recovery_plan": true
+    }
+  }
+}

@@ -1,0 +1,57 @@
+# Streamlit-Konfiguration für Gmunden Transparenz-Datenbank
+# Optimiert für All-Hands.dev und lokale Entwicklung
+
+[server]
+port = 12000
+address = "0.0.0.0"
+baseUrlPath = ""
+enableCORS = true
+enableXsrfProtection = false
+maxUploadSize = 50
+maxMessageSize = 50
+enableWebsocketCompression = false
+allowRunOnSave = false
+runOnSave = false
+headless = true
+
+[browser]
+serverAddress = "0.0.0.0"
+gatherUsageStats = false
+serverPort = 12000
+
+[global]
+developmentMode = false
+logLevel = "info"
+unitTest = false
+suppressDeprecationWarnings = true
+showWarningOnDirectExecution = false
+
+[client]
+caching = true
+displayEnabled = true
+showErrorDetails = false
+toolbarMode = "minimal"
+
+[runner]
+magicEnabled = true
+installTracer = false
+fixMatplotlib = true
+postScriptGC = true
+fastReruns = true
+enforceSerializableSessionState = false
+
+[logger]
+level = "info"
+messageFormat = "%(asctime)s %(message)s"
+enableRich = false
+
+[theme]
+primaryColor = "#2e7d32"
+backgroundColor = "#ffffff"
+secondaryBackgroundColor = "#f0f2f6"
+textColor = "#262730"
+font = "sans serif"
+
+[deprecation]
+showPyplotGlobalUse = false
+showfileUploaderEncoding = false

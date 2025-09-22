@@ -1,0 +1,60 @@
+# 🐳 Vereinfachtes Docker Compose für Gmunden Transparenz-System
+# Schnelle Installation ohne komplexe Services
+
+version: '3.8'
+
+services:
+  # Hauptanwendung
+  gmunden-app:
+    build:
+      context: .
+      dockerfile: Dockerfile.simple
+    container_name: gmunden-transparenz
+    ports:
+      - "12000:12000"
+    volumes:
+      - gmunden_data:/app/data
+      - gmunden_logs:/app/logs
+      - ./uploads:/app/data/uploads  # Für lokale Uploads
+    environment:
+      - STREAMLIT_SERVER_PORT=12000
+      - STREAMLIT_SERVER_ADDRESS=0.0.0.0
+    restart: unless-stopped
+    healthcheck:
+      test: ["CMD", "curl", "-f", "http://localhost:12000/_stcore/health"]
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 40s
+    networks:
+      - gmunden-network
+
+  # MongoDB Datenbank (Optional - kann auskommentiert werden)
+  mongo:
+    image: mongo:7.0
+    container_name: gmunden-mongo
+    ports:
+      - "27017:27017"
+    volumes:
+      - gmunden_mongo_data:/data/db
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=gmunden123
+      - MONGO_INITDB_DATABASE=gmunden
+    restart: unless-stopped
+    networks:
+      - gmunden-network
+
+# Volumes für persistente Daten
+volumes:
+  gmunden_data:
+    driver: local
+  gmunden_logs:
+    driver: local
+  gmunden_mongo_data:
+    driver: local
+
+# Netzwerk
+networks:
+  gmunden-network:
+    driver: bridge

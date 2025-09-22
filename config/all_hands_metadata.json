@@ -1,0 +1,112 @@
+{
+  "project": {
+    "name": "Gemeinde Gmunden Transparenz-System",
+    "version": "2.0.0",
+    "description": "Vollständiges Transparenz-System für Gemeindedaten mit KI-gestützter Suche",
+    "type": "web-application",
+    "framework": "streamlit",
+    "language": "python",
+    "optimized_for": "all-hands-dev"
+  },
+  "all_hands_config": {
+    "runtime": {
+      "primary_port": 12000,
+      "secondary_port": 12001,
+      "host": "0.0.0.0",
+      "cors_enabled": true,
+      "iframe_allowed": true,
+      "external_access": true
+    },
+    "performance": {
+      "memory_limit": "2GB",
+      "cpu_cores": 2,
+      "cache_enabled": true,
+      "compression": true,
+      "lazy_loading": true
+    },
+    "security": {
+      "data_validation": "strict",
+      "input_sanitization": true,
+      "output_verification": true,
+      "no_hallucination": true,
+      "reality_check": true
+    }
+  },
+  "data_sources": {
+    "supported_formats": [
+      "mongodb",
+      "postgresql", 
+      "csv",
+      "excel",
+      "pdf",
+      "docx",
+      "txt",
+      "json",
+      "xml",
+      "images_with_ocr",
+      "web_scraping",
+      "api_endpoints"
+    ],
+    "import_methods": {
+      "automatic": {
+        "scheduled_imports": true,
+        "api_polling": true,
+        "file_watching": true,
+        "web_crawling": true
+      },
+      "manual": {
+        "drag_drop_upload": true,
+        "bulk_import": true,
+        "single_file_import": true,
+        "url_import": true
+      }
+    }
+  },
+  "nlp_config": {
+    "language": "german",
+    "features": {
+      "natural_language_queries": true,
+      "entity_recognition": true,
+      "intent_classification": true,
+      "context_understanding": true,
+      "correlation_analysis": true,
+      "fact_verification": true
+    },
+    "quality_assurance": {
+      "no_hallucination": true,
+      "source_verification": true,
+      "confidence_scoring": true,
+      "uncertainty_indication": true
+    }
+  },
+  "web_interface": {
+    "features": {
+      "responsive_design": true,
+      "accessibility": true,
+      "multi_device_support": true,
+      "offline_capability": false,
+      "real_time_updates": true
+    },
+    "user_experience": {
+      "intuitive_search": true,
+      "visual_data_representation": true,
+      "export_functionality": true,
+      "bookmark_system": true,
+      "history_tracking": true
+    }
+  },
+  "monitoring": {
+    "data_quality": {
+      "accuracy_checks": true,
+      "completeness_validation": true,
+      "consistency_monitoring": true,
+      "timeliness_tracking": true
+    },
+    "system_health": {
+      "performance_monitoring": true,
+      "error_tracking": true,
+      "usage_analytics": true,
+      "uptime_monitoring": true
+    }
+  }
+}

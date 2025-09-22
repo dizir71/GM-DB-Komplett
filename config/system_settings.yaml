@@ -1,0 +1,213 @@
+# All-Hands.dev Optimierte Systemeinstellungen
+# Gemeinde Gmunden Transparenz-System
+
+system:
+  name: "gmunden-transparenz-system"
+  version: "2.0.0"
+  environment: "production"
+  
+# All-Hands.dev spezifische Konfiguration
+all_hands:
+  runtime:
+    ports:
+      primary: 12000
+      secondary: 12001
+    host: "0.0.0.0"
+    cors:
+      enabled: true
+      origins: ["*"]
+      methods: ["GET", "POST", "PUT", "DELETE", "OPTIONS"]
+      headers: ["*"]
+    iframe:
+      allowed: true
+      same_origin: false
+    external_access:
+      enabled: true
+      public_urls:
+        - "https://work-1-syygiirqlvvwfggb.prod-runtime.all-hands.dev"
+        - "https://work-2-syygiirqlvvwfggb.prod-runtime.all-hands.dev"
+
+# Web-Anwendung Konfiguration
+web_app:
+  framework: "streamlit"
+  config:
+    server:
+      port: 12000
+      address: "0.0.0.0"
+      enableCORS: true
+      enableXsrfProtection: false
+      allowedOrigins: ["*"]
+    browser:
+      gatherUsageStats: false
+    theme:
+      primaryColor: "#1f77b4"
+      backgroundColor: "#ffffff"
+      secondaryBackgroundColor: "#f0f2f6"
+      textColor: "#262730"
+
+# Datenbank Konfiguration
+database:
+  mongodb:
+    host: "localhost"
+    port: 27017
+    database: "gmunden_transparenz"
+    collections:
+      - "finanzen"
+      - "protokolle" 
+      - "dokumente"
+      - "jahre"
+      - "statistiken"
+    indexes:
+      text_search: true
+      date_range: true
+      category_filter: true
+
+# KI & NLP Konfiguration
+ai_config:
+  nlp:
+    language: "de"
+    model: "de_core_news_lg"
+    features:
+      - "entity_recognition"
+      - "intent_classification"
+      - "sentiment_analysis"
+      - "correlation_detection"
+    quality_control:
+      fact_checking: true
+      source_verification: true
+      confidence_threshold: 0.8
+      hallucination_prevention: true
+  
+  ocr:
+    engine: "tesseract"
+    languages: ["deu", "eng"]
+    preprocessing: true
+    confidence_threshold: 0.7
+
+# Datenintegration
+data_integration:
+  sources:
+    files:
+      supported_formats: ["pdf", "docx", "xlsx", "csv", "txt", "json"]
+      max_file_size: "100MB"
+      batch_processing: true
+    
+    web:
+      scraping_enabled: true
+      api_integration: true
+      rate_limiting: true
+    
+    images:
+      ocr_enabled: true
+      supported_formats: ["jpg", "png", "tiff", "pdf"]
+      preprocessing: true
+  
+  import_methods:
+    automatic:
+      scheduled: true
+      file_watching: true
+      api_polling: true
+    manual:
+      upload: true
+      drag_drop: true
+      url_import: true
+
+# Qualitätssicherung
+quality_assurance:
+  data_validation:
+    strict_mode: true
+    schema_validation: true
+    duplicate_detection: true
+    consistency_checks: true
+  
+  output_verification:
+    fact_checking: true
+    source_attribution: true
+    confidence_scoring: true
+    uncertainty_indication: true
+  
+  monitoring:
+    real_time: true
+    alerts: true
+    logging: "detailed"
+
+# Performance Optimierung
+performance:
+  caching:
+    enabled: true
+    ttl: 3600  # 1 Stunde
+    max_size: "500MB"
+  
+  compression:
+    enabled: true
+    level: 6
+  
+  lazy_loading:
+    enabled: true
+    chunk_size: 100
+  
+  database:
+    connection_pooling: true
+    query_optimization: true
+    indexing: "automatic"
+
+# Sicherheit
+security:
+  input_validation:
+    enabled: true
+    sanitization: true
+    xss_protection: true
+  
+  data_protection:
+    anonymization: true
+    encryption_at_rest: false  # Für Transparenz
+    access_logging: true
+  
+  rate_limiting:
+    enabled: true
+    requests_per_minute: 100
+    burst_limit: 200
+
+# Logging & Monitoring
+logging:
+  level: "INFO"
+  format: "structured"
+  destinations:
+    - "console"
+    - "file"
+  
+  files:
+    app_log: "/tmp/gmunden_app.log"
+    error_log: "/tmp/gmunden_error.log"
+    access_log: "/tmp/gmunden_access.log"
+
+monitoring:
+  health_checks:
+    enabled: true
+    interval: 30  # Sekunden
+    endpoints:
+      - "/health"
+      - "/ready"
+  
+  metrics:
+    enabled: true
+    collection_interval: 60  # Sekunden
+    retention: "7d"
+  
+  alerts:
+    enabled: true
+    channels: ["log", "console"]
+
+# Backup & Recovery
+backup:
+  enabled: true
+  schedule: "0 2 * * *"  # Täglich um 2 Uhr
+  retention: "30d"
+  compression: true
+  
+# Entwicklung & Debug
+development:
+  debug_mode: false
+  hot_reload: false
+  profiling: false
+  test_data: false

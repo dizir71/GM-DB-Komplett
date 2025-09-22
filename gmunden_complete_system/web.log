@@ -1,0 +1,13 @@
+nohup: ignoring input
+2025-09-22 08:56:57.108 "global.logLevel" is not a valid config option. If you previously had this config option set, it may have been removed.
+2025-09-22 08:56:57.108 "client.caching" is not a valid config option. If you previously had this config option set, it may have been removed.
+2025-09-22 08:56:57.108 "client.displayEnabled" is not a valid config option. If you previously had this config option set, it may have been removed.
+2025-09-22 08:56:57.108 "runner.installTracer" is not a valid config option. If you previously had this config option set, it may have been removed.
+2025-09-22 08:56:57.108 "runner.fixMatplotlib" is not a valid config option. If you previously had this config option set, it may have been removed.
+2025-09-22 08:56:57.108 "deprecation.showPyplotGlobalUse" is not a valid config option. If you previously had this config option set, it may have been removed.
+2025-09-22 08:56:57.108 "deprecation.showfileUploaderEncoding" is not a valid config option. If you previously had this config option set, it may have been removed.
+
+  You can now view your Streamlit app in your browser.
+
+  URL: http://0.0.0.0:12000
+

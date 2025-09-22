@@ -1,0 +1,44 @@
+# Beispiel-Konfiguration für Datenimport
+# Gemeinde Gmunden Transparenz-System
+
+# Datei-basierte Datenquellen
+files:
+  - path: "/path/to/finanzdaten_2023.csv"
+    type: "csv"
+    description: "Finanzdaten 2023"
+    
+  - path: "/path/to/protokolle/"
+    type: "directory"
+    recursive: true
+    description: "Alle Protokolle"
+    
+  - path: "/path/to/gemeinderat_protokoll.pdf"
+    type: "pdf"
+    description: "Gemeinderats-Protokoll"
+
+# Web-API Datenquellen
+apis:
+  - url: "https://data.gv.at/api/v1/gemeinde/gmunden/finanzen"
+    key: "your-api-key-here"
+    description: "Offizielle Finanzdaten"
+    
+  - url: "https://statistik.at/api/gemeinden/40101"
+    description: "Statistik Austria Daten"
+
+# Import-Einstellungen
+settings:
+  validate_data: true
+  create_backup: true
+  overwrite_existing: false
+  batch_size: 1000
+  
+# Qualitätskontrolle
+quality_control:
+  min_confidence: 0.8
+  fact_checking: true
+  duplicate_detection: true
+  
+# Benachrichtigungen
+notifications:
+  email: "admin@gemeinde-gmunden.at"
+  webhook: "https://your-webhook-url.com/import-complete"

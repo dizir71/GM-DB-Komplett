@@ -1,0 +1,54 @@
+# Gemeinde Gmunden Transparenz-System
+# Optimiert für All-Hands.dev
+
+# Web-Framework
+streamlit>=1.28.0
+streamlit-option-menu>=0.3.6
+
+# Datenverarbeitung
+pandas>=2.0.0
+numpy>=1.24.0
+plotly>=5.15.0
+
+# NLP & KI
+spacy>=3.6.0
+# Deutsches spaCy-Modell wird separat installiert
+
+# Datenbank
+pymongo>=4.5.0
+motor>=3.3.0  # Async MongoDB
+
+# PDF & OCR
+PyMuPDF>=1.23.0
+pytesseract>=0.3.10
+Pillow>=10.0.0
+
+# Excel/CSV
+openpyxl>=3.1.0
+xlrd>=2.0.1
+
+# Web-Requests
+requests>=2.31.0
+aiohttp>=3.8.0
+
+# Konfiguration
+PyYAML>=6.0
+python-dotenv>=1.0.0
+
+# Logging & Monitoring
+structlog>=23.1.0
+
+# Utilities
+python-dateutil>=2.8.2
+tqdm>=4.65.0
+
+# All-Hands.dev Optimierungen
+gunicorn>=21.2.0  # Production WSGI Server
+uvicorn>=0.23.0   # ASGI Server
+fastapi>=0.103.0  # Für API-Endpoints
+
+# Entwicklung & Testing (optional)
+pytest>=7.4.0
+pytest-asyncio>=0.21.0
+black>=23.7.0
+flake8>=6.0.0
