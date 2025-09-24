@@ -1,4 +1,4 @@
-# 📥 Download-Anleitung für M3 Silicon Mac
+-# 📥 Download-Anleitung für M3 Silicon Mac
 
 ## 🚀 **Schnellstart (2 Minuten)**
 
@@ -13,7 +13,7 @@ cd gmunden_complete_system
 ```
 
 ### **Option 2: Browser-Download**
-1. **Download**: [gmunden_complete_system_final.zip](https://work-1-syygiirqlvvwfggb.prod-runtime.all-hands.dev/gmunden_complete_system_final.zip)
+1. **Download**: [gmunden_complete_system_final.zip]
 2. **Entpacken**: Doppelklick auf ZIP-Datei
 3. **Terminal**: `cd ~/Downloads/gmunden_complete_system`
 4. **Starten**: `./start_m3_silicon.sh`
@@ -29,7 +29,7 @@ mkdir -p ~/Projects/gmunden-transparenz
 cd ~/Projects/gmunden-transparenz
 
 # System herunterladen
-curl -L -o gmunden_system.zip "https://work-1-syygiirqlvvwfggb.prod-runtime.all-hands.dev/gmunden_complete_system_final.zip"
+gmunden_complete_system_final.zip
 
 # Entpacken
 unzip gmunden_system.zip
