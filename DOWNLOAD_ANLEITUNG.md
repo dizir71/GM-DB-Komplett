@@ -1,16 +1,12 @@
--# 📥 Download-Anleitung für M3 Silicon Mac
-
 ## 🚀 **Schnellstart (2 Minuten)**
 
 ### **Option 1: Direkter Download**
 ```bash
 # Terminal öffnen und eingeben:
-cd ~/Downloads
-curl -L -o gmunden_system.zip "https://work-1-syygiirqlvvwfggb.prod-runtime.all-hands.dev/gmunden_complete_system_final.zip"
+gmunden_system.zip
 unzip gmunden_system.zip
 cd gmunden_complete_system
 ./start_m3_silicon.sh
-```
 
 ### **Option 2: Browser-Download**
 1. **Download**: [gmunden_complete_system_final.zip]
