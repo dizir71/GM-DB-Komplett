@@ -35,17 +35,15 @@ gmunden_complete_1to1.zip
 ## 🚀 **SOFORT-INSTALLATION:**
 
 ### **Ein-Befehl-Installation:**
-```bash
-curl -L -o gmunden_complete_1to1.zip "https://work-2-syygiirqlvvwfggb.prod-runtime.all-hands.dev/gmunden_complete_1to1_docker.zip" && \
+bash
 unzip gmunden_complete_1to1.zip && \
 cd gmunden_complete_system && \
 ./install_docker.sh
-```
 
 ### **Schritt-für-Schritt:**
-```bash
+bash
 # 1. Herunterladen
-curl -L -o gmunden_complete_1to1.zip "https://work-2-syygiirqlvvwfggb.prod-runtime.all-hands.dev/gmunden_complete_1to1_docker.zip"
+gmunden_complete_1to1.zip
 
 # 2. Entpacken
 unzip gmunden_complete_1to1.zip
@@ -56,7 +54,6 @@ cd gmunden_complete_system
 
 # 4. System öffnen
 open http://localhost:12000
-```
 
 ---
 
@@ -117,7 +114,7 @@ services:
 ## 🔧 **SYSTEM-VERWALTUNG:**
 
 ### **Docker-Befehle:**
-```bash
+bash
 # Status aller Container
 docker compose ps
 
@@ -135,10 +132,10 @@ docker compose up -d
 
 # Einzelnen Service neustarten
 docker compose restart gmunden-app
-```
+
 
 ### **Backup-System:**
-```bash
+bash
 # Automatische Backups anzeigen
 ls -la backups/
 
@@ -150,10 +147,10 @@ docker compose exec gmunden-app python -c "
 from backend.mongodb_connector import db_connector
 db_connector.restore_data('/app/backups/backup_file.json')
 "
-```
+
 
 ### **Datenbank-Zugriff:**
-```bash
+bash
 # MongoDB Shell
 docker compose exec mongo mongosh -u admin -p gmunden123 --authenticationDatabase admin
 
@@ -162,14 +159,14 @@ docker compose exec mongo mongosh -u admin -p gmunden123 --eval "db.stats()"
 
 # Collections anzeigen
 docker compose exec mongo mongosh -u admin -p gmunden123 --eval "db.runCommand('listCollections')"
-```
+
 
 ---
 
 ## 📊 **IHRE 16 PDF-PROTOKOLLE:**
 
 ### **Optimale Einstellungen für Bulk-Import:**
-```
+
 ⚙️ Empfohlene Konfiguration:
 ├── Max. Dateigröße: 50MB
 ├── Verarbeitungs-Chunks: 3 Dateien
@@ -178,7 +175,7 @@ docker compose exec mongo mongosh -u admin -p gmunden123 --eval "db.runCommand('
 ├── OCR aktivieren: ✅
 ├── Auto-Kategorisierung: ✅
 └── Fehler überspringen: ✅
-```
+
 
 ### **Verarbeitungsablauf:**
 1. **Admin-Login**: http://localhost:12000 → `admin123`
@@ -202,22 +199,22 @@ docker compose exec mongo mongosh -u admin -p gmunden123 --eval "db.runCommand('
 ## 🌐 **REMOTE-DEPLOYMENT:**
 
 ### **Auf Remote-Server installieren:**
-```bash
+bash
 # Einzelner Server
 ./deploy_unix.sh --remote user@server.com
 
 # Mehrere Server
 ./deploy_unix.sh --replicate hosts.txt
-```
+
 
 ### **Produktions-Deployment:**
-```bash
+bash
 # Mit SSL und Domain
 ./deploy_unix.sh --production --domain transparenz.gmunden.at --ssl
 
 # Mit externer MongoDB
 ./deploy_unix.sh --external-db mongodb://prod-server:27017
-```
+
 
 ---
 
